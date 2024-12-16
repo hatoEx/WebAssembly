@@ -1,0 +1,27 @@
+canvas {
+    display: block;
+    margin: 0 auto;
+    cursor: grab;
+}
+
+
+ /* リストを横並びにするスタイル */
+ .horizontal-list {
+    list-style: none; /* リストマーカーを削除 */
+    padding: 0;
+    margin: 0;
+    display: flex; /* 横並びにする */
+    gap: 10px; /* リストアイテムの間隔を設定 */
+}
+
+.horizontal-list li {
+    padding: 5px 10px;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.horizontal-list li:hover {
+    background-color: #e0e0e0;
+}
