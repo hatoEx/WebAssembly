@@ -93,57 +93,61 @@ extern "C" {
     )";
 
 static const char* fragmentShaderSource = R"(
-    precision highp float;
-    varying vec2 v_coord;
+  
+precision highp float;
+varying vec2 v_coord;
 
-    uniform float u_offsetX;
-    uniform float u_offsetY;
-    uniform float u_zoom;
-    uniform int u_maxIteration;
+uniform float u_offsetX;
+uniform float u_offsetY;
+uniform float u_zoom;
+uniform int u_maxIteration;
 
-    vec3 hsv_to_rgb(float h, float s, float v) {
-        float c = v * s;
-        float h_sector = h / 60.0;
-        float x = c * (1.0 - abs(mod(h_sector, 2.0) - 1.0));
-        vec3 rgb;
-        if (h_sector < 1.0) rgb = vec3(c, x, 0.0);
-        else if (h_sector < 2.0) rgb = vec3(x, c, 0.0);
-        else if (h_sector < 3.0) rgb = vec3(0.0, c, x);
-        else if (h_sector < 4.0) rgb = vec3(0.0, x, c);
-        else if (h_sector < 5.0) rgb = vec3(x, 0.0, c);
-        else rgb = vec3(c, 0.0, x);
-        return rgb + (v - c);
-    }
+vec3 hsv_to_rgb(float h, float s, float v) {
+    float c = v * s;
+    float h_sector = h / 60.0;
+    float x = c * (1.0 - abs(mod(h_sector, 2.0) - 1.0));
+    vec3 rgb;
+    if (h_sector < 1.0) rgb = vec3(c, x, 0.0);
+    else if (h_sector < 2.0) rgb = vec3(x, c, 0.0);
+    else if (h_sector < 3.0) rgb = vec3(0.0, c, x);
+    else if (h_sector < 4.0) rgb = vec3(0.0, x, c);
+    else if (h_sector < 5.0) rgb = vec3(x, 0.0, c);
+    else rgb = vec3(c, 0.0, x);
+    return rgb + (v - c);
+}
 
-    void main() {
-        // v_coordは -1～1 の範囲。CPU側との整合を取るため、y軸を反転する。
-        float px = (v_coord.x / 2.0) * (3.5 / u_zoom) + u_offsetX;
-        float py = ((-v_coord.y) / 2.0) * (2.0 / u_zoom) + u_offsetY;
+void main() {
+    // v_coordは -1～1 の範囲。CPU側との整合を取るため、y軸を反転する。
+    float px = (v_coord.x / 2.0) * (3.5 / u_zoom) + u_offsetX;
+    float py = ((-v_coord.y) / 2.0) * (2.0 / u_zoom) + u_offsetY;
 
 
-        float zx = 0.0;
-        float zy = 0.0;
-        int iteration = 0;
+    float zx = 0.0;
+    float zy = 0.0;
+    int iteration = 0;
 
-        for (int i = 0; i < 10000; i++) {
-            if (i >= u_maxIteration) break;
-            float x2 = zx * zx - zy * zy + px;
-            zy = 2.0 * zx * zy + py;
-            zx = x2;
-            if (zx * zx + zy * zy > 4.0) {
-                iteration = i;
-                break;
-            }
+    for (int i = 0; i < 10000; i++) {
+        if (i >= u_maxIteration) {
+            iteration = u_maxIteration;
+            break;
         }
-
-        if (iteration == u_maxIteration) {
-            gl_FragColor = vec4(0.0,0.0,0.0,1.0);
-        } else {
-            float hue = 360.0 * float(iteration) / float(u_maxIteration);
-            vec3 color = hsv_to_rgb(hue, 1.0, 1.0);
-            gl_FragColor = vec4(color, 1.0);
+        float x2 = zx * zx - zy * zy + px;
+        zy = 2.0 * zx * zy + py;
+        zx = x2;
+        if (zx * zx + zy * zy > 4.0) {
+            iteration = i;
+            break;
         }
     }
+
+    if (iteration == u_maxIteration) {
+        gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);
+    } else {
+        float hue = 360.0 * float(iteration) / float(u_maxIteration);
+        vec3 color = hsv_to_rgb(hue, 1.0, 1.0);
+        gl_FragColor = vec4(color, 1.0);
+    }
+}
 )";
 
 
