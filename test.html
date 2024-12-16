@@ -5,6 +5,11 @@
     <title>Mandelbrot Set</title>
 </head>
 <body>
+    <select id="renderMode">
+        <option value="cpu">CPU</option>
+        <option value="gpu">GPU</option>
+    </select>
+    <button id="renderButton">Render</button>
     <canvas id="mandelbrot" width="800" height="800"></canvas>
     <script type="module" src="test.js"></script>
 </body>
