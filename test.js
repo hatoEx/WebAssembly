@@ -27,15 +27,27 @@ let isBenchmarking = false;
 let benchmarkDuration = 10000; 
 let benchmarkStartTime = 0;
 
+let isDragging = false;
+let lastMouseX = 0;
+let lastMouseY = 0;
+
 function resetCanvas() {
     const oldCanvas = document.getElementById('mandelbrot');
     const parent = oldCanvas.parentNode;
     const newCanvas = document.createElement('canvas');
     newCanvas.id = 'mandelbrot';
-    newCanvas.width = 500;
-    newCanvas.height = 500;
+    newCanvas.width = width;
+    newCanvas.height = height  ;
     parent.replaceChild(newCanvas, oldCanvas);
     return newCanvas;
+}
+
+// マウスイベントを再登録する関数
+function attachMouseEvents(canvasElement) {
+    canvasElement.addEventListener('mousedown', onMouseDown);
+    canvasElement.addEventListener('mousemove', onMouseMove);
+    canvasElement.addEventListener('mouseup', onMouseUp);
+    canvasElement.addEventListener('mouseleave', onMouseUp);
 }
 
 async function renderCPU(module) {
@@ -57,6 +69,7 @@ async function render() {
     if (mode !== currentMode) {
         canvas = resetCanvas();
         ctx = null;
+        attachMouseEvents(canvas); // 新しいcanvasにマウスイベントを再登録
         currentMode = mode;
     }
 
@@ -68,9 +81,11 @@ async function render() {
 }
 
 function updateZoom() {
+    const mode = renderModeSelect.value;
     const currentTime = performance.now();
     const delta = currentTime - lastTime;
-    zoom += 0.000001 * delta;
+    if(mode === 'cpu') zoom += 0.00001 * delta;
+    else zoom += 0.000001 * delta;
     lastTime = currentTime;
 }
 
@@ -110,7 +125,35 @@ function startBenchmark() {
     scorevalue.textContent = frame;
     renderButton.disabled = true;
     benchmarkStartTime = performance.now();
+    finalScoreboard.style.display = 'none'; // スタート時に非表示
     benchmarkLoop();
 }
+
+function onMouseDown(event) {
+    isDragging = true;
+    lastMouseX = event.clientX;
+    lastMouseY = event.clientY;
+}
+
+function onMouseMove(event) {
+    if (!isDragging) return;
+
+    const deltaX = (event.clientX - lastMouseX) / 600; // 調整係数
+    const deltaY = (event.clientY - lastMouseY) / 600;
+
+    offsetX -= deltaX;
+    offsetY -= deltaY;
+
+    lastMouseX = event.clientX;
+    lastMouseY = event.clientY;
+
+    render();
+}
+
+function onMouseUp() {
+    isDragging = false;
+}
+
+attachMouseEvents(canvas); // 初期canvasにもイベント登録
 
 renderButton.addEventListener('click', startBenchmark);
