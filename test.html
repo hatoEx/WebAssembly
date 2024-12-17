@@ -3,6 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <title>Mandelbrot Set</title>
+    <style>
+        canvas {
+            display: block;
+            margin: 0 auto;
+            cursor: grab;
+        }
+
+        /* リストを横並びにするスタイル(もとのコードに合わせて) */
+        .horizontal-list {
+            list-style: none; 
+            padding: 0;
+            margin: 0;
+            display: flex; 
+            gap: 10px; 
+        }
+
+        .horizontal-list li {
+            padding: 5px 10px;
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .horizontal-list li:hover {
+            background-color: #e0e0e0;
+        }
+
+        /* 最終スコア表示用のオーバーレイ */
+        #finalScoreboard {
+            display: none;
+            position: absolute;
+            top: 50%; 
+            left: 50%; 
+            transform: translate(-50%, -50%);
+            background-color: rgba(50, 50, 50, 0.7);
+            color: #fff;
+            padding: 20px 40px;
+            font-size: 2em;
+            border-radius: 10px;
+            text-align: center;
+            z-index: 999; /* canvasより前面に表示させる */
+        }
+        body {
+            position: relative; /* relativeにして絶対配置要素を配置しやすくする */
+        }
+    </style>
 </head>
 <body>
     <select id="renderMode">
@@ -12,6 +59,13 @@
     <button id="renderButton">Render</button>
     <canvas id="mandelbrot" width="800" height="800"></canvas>
     <div>現在のscore: <span id="score">0</span></div>
+    <div>残り時間: <span id="remainingTime">0</span></div>
+
+    <!-- ベンチマーク完了後に表示する最終スコア用のオーバーレイ -->
+    <div id="finalScoreboard">
+        最終スコア：<span id="finalScore"></span>
+    </div>
+
     <script type="module" src="test.js"></script>
 </body>
 </html>

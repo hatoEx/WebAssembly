@@ -12,6 +12,9 @@ const wasmModulePromise = createModule();
 const renderModeSelect = document.getElementById('renderMode');
 const renderButton = document.getElementById('renderButton');
 const scorevalue = document.getElementById('score');
+const remainingTimeValue = document.getElementById('remainingTime');
+const finalScoreboard = document.getElementById('finalScoreboard');
+const finalScore = document.getElementById('finalScore');
 
 let lastTime = performance.now();
 let frame = 0;
@@ -20,11 +23,10 @@ let currentMode = null;
 let canvas = document.getElementById('mandelbrot');
 let ctx = null;
 
-let isBenchmarking = false;  // ベンチマーク中かどうか
-let benchmarkDuration = 10000; // ベンチマーク実行時間（ミリ秒）
+let isBenchmarking = false;  
+let benchmarkDuration = 10000; 
 let benchmarkStartTime = 0;
 
-// Canvasを再生成する関数
 function resetCanvas() {
     const oldCanvas = document.getElementById('mandelbrot');
     const parent = oldCanvas.parentNode;
@@ -72,7 +74,6 @@ function updateZoom() {
     lastTime = currentTime;
 }
 
-// ベンチマーク用ループ
 function benchmarkLoop() {
     if (!isBenchmarking) return;
 
@@ -82,19 +83,26 @@ function benchmarkLoop() {
         scorevalue.textContent = frame;
 
         const now = performance.now();
-        // ベンチマーク時間が過ぎているかチェック
-        if (now - benchmarkStartTime < benchmarkDuration) {
-            // 継続
+        const elapsed = now - benchmarkStartTime;
+        const remaining = benchmarkDuration - elapsed;
+
+        if (remaining > 0) {
+            const remainingSeconds = (remaining / 1000).toFixed(2);
+            remainingTimeValue.textContent = remainingSeconds + " 秒";
             requestAnimationFrame(benchmarkLoop);
         } else {
             // 終了処理
             isBenchmarking = false;
             renderButton.disabled = false;
+            remainingTimeValue.textContent = "0 秒";
+
+            // ベンチマーク終了後に最終スコア表示
+            finalScore.textContent = frame;
+            finalScoreboard.style.display = 'block';
         }
     });
 }
 
-// ベンチマーク開始関数
 function startBenchmark() {
     if (isBenchmarking) return;
     isBenchmarking = true;
@@ -104,9 +112,5 @@ function startBenchmark() {
     benchmarkStartTime = performance.now();
     benchmarkLoop();
 }
-
-// ベンチマーク実行時間を変更できるようにしたい場合は、別途入力フォームを用意し、  
-// その値をbenchmarkDurationに反映させればよいです。
-// ここでは固定値5秒としているため、省略。
 
 renderButton.addEventListener('click', startBenchmark);
