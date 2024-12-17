@@ -171,6 +171,14 @@ function onMouseUp() {
     isDragging = false;
 }
 
+const socket = io.connect("http://" + document.domain + ":" + location.port );
+
+socket.on('message', function(data) {
+    console.log("connected: " + data.data);
+});
+
+
+
 attachMouseEvents(canvas); // 初期canvasにもイベント登録
 
 renderButton.addEventListener('click', startBenchmark);

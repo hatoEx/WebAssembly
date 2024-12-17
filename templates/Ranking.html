@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ランキング</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/Ranking.css') }}">
+</head>
+<body>
+    <div class="ranking-container">
+        <h1 class="ranking-title">ランキング一覧</h1>
+        <ul class="ranking-list" id="ranking-list">
+            <!-- JSで動的にランキング内容を追加する -->
+            <li class="ranking-item">
+                <span class="rank">1</span>
+                <span class="name">プレイヤー名</span>
+                <span class="score"> 点</span>
+            </li>
+        </ul>
+    </div>
+    <script type="module" src="{{ url_for('static', filename='javascript/Ranking.js') }}"></script>
+</body>
+</html>

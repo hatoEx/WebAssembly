@@ -1,0 +1,68 @@
+/* 全体のリセット */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    color: #333;
+    line-height: 1.6;
+}
+
+.ranking-container {
+    max-width: 600px;
+    margin: 20px auto;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+}
+
+.ranking-title {
+    text-align: center;
+    font-size: 1.8rem;
+    margin-bottom: 15px;
+    color: #333;
+}
+
+.ranking-list {
+    list-style: none;
+}
+
+.ranking-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 15px;
+    border-bottom: 1px solid #ddd;
+    transition: background 0.2s;
+}
+
+.ranking-item:last-child {
+    border-bottom: none;
+}
+
+.ranking-item:hover {
+    background-color: #f1f1f1;
+}
+
+.rank {
+    font-weight: bold;
+    color: #555;
+    flex: 0 0 30px;
+}
+
+.name {
+    flex-grow: 1;
+    margin: 0 10px;
+    font-size: 1rem;
+    color: #333;
+}
+
+.score {
+    color: #666;
+    font-weight: bold;
+}

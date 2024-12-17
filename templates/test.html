@@ -9,8 +9,7 @@
             margin: 0 auto;
             cursor: grab;
         }
-
-        /* 必要に応じてスタイルを追加してください */
+        
         #finalScoreboard {
             display: none;
             position: absolute;
@@ -26,9 +25,10 @@
             z-index: 999; /* canvasより前面に表示させる */
         }
         body {
-            position: relative; /* relativeにして絶対配置要素を配置しやすくする */
+            position: relative;
         }
     </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.4.1/socket.io.js"></script>
 </head>
 <body>
     <select id="renderMode">
@@ -45,6 +45,6 @@
         最終スコア：<span id="finalScore"></span>
     </div>
 
-    <script type="module" src="{{ url_for('static', filename='test.js') }}"></script>
+    <script type="module" src="{{ url_for('static', filename='javascript/test.js') }}"></script>
 </body>
 </html>
