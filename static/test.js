@@ -89,6 +89,19 @@ function updateZoom() {
     lastTime = currentTime;
 }
 
+function sendScore(score) {
+    fetch('/submit_score', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ score: score })
+    })
+    .then(response => response.json())
+    .then(data => console.log('Success:', data))
+    .catch((error) => console.error('Error:', error));
+}
+
 function benchmarkLoop() {
     if (!isBenchmarking) return;
 
@@ -115,6 +128,7 @@ function benchmarkLoop() {
             // ベンチマーク終了後に最終スコア表示
             finalScore.textContent = frame;
             finalScoreboard.style.display = 'block';
+            sendScore(frame);
         }
     });
 }
