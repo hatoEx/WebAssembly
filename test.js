@@ -109,6 +109,7 @@ function benchmarkLoop() {
             // 終了処理
             isBenchmarking = false;
             renderButton.disabled = false;
+            renderModeSelect.disabled = false;  // ここを追加
             remainingTimeValue.textContent = "0 秒";
 
             // ベンチマーク終了後に最終スコア表示
@@ -124,6 +125,8 @@ function startBenchmark() {
     frame = 0;
     scorevalue.textContent = frame;
     renderButton.disabled = true;
+    renderModeSelect.disabled = true;  // ここを追加
+
     benchmarkStartTime = performance.now();
     finalScoreboard.style.display = 'none'; // スタート時に非表示
     benchmarkLoop();
