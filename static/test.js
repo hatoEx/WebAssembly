@@ -37,7 +37,7 @@ function resetCanvas() {
     const newCanvas = document.createElement('canvas');
     newCanvas.id = 'mandelbrot';
     newCanvas.width = width;
-    newCanvas.height = height  ;
+    newCanvas.height = height;
     parent.replaceChild(newCanvas, oldCanvas);
     return newCanvas;
 }
@@ -109,7 +109,7 @@ function benchmarkLoop() {
             // 終了処理
             isBenchmarking = false;
             renderButton.disabled = false;
-            renderModeSelect.disabled = false;  // ここを追加
+            renderModeSelect.disabled = false;  // ベンチマーク終了後に<select>を有効化
             remainingTimeValue.textContent = "0 秒";
 
             // ベンチマーク終了後に最終スコア表示
@@ -125,7 +125,7 @@ function startBenchmark() {
     frame = 0;
     scorevalue.textContent = frame;
     renderButton.disabled = true;
-    renderModeSelect.disabled = true;  // ここを追加
+    renderModeSelect.disabled = true;  // ベンチマーク中に<select>を無効化
 
     benchmarkStartTime = performance.now();
     finalScoreboard.style.display = 'none'; // スタート時に非表示

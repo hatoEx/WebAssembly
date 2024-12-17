@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ja">
 <head>
     <meta charset="UTF-8">
     <title>Mandelbrot Set</title>
@@ -10,28 +10,7 @@
             cursor: grab;
         }
 
-        /* リストを横並びにするスタイル(もとのコードに合わせて) */
-        .horizontal-list {
-            list-style: none; 
-            padding: 0;
-            margin: 0;
-            display: flex; 
-            gap: 10px; 
-        }
-
-        .horizontal-list li {
-            padding: 5px 10px;
-            background-color: #f0f0f0;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        .horizontal-list li:hover {
-            background-color: #e0e0e0;
-        }
-
-        /* 最終スコア表示用のオーバーレイ */
+        /* 必要に応じてスタイルを追加してください */
         #finalScoreboard {
             display: none;
             position: absolute;
@@ -66,6 +45,6 @@
         最終スコア：<span id="finalScore"></span>
     </div>
 
-    <script type="module" src="test.js"></script>
+    <script type="module" src="{{ url_for('static', filename='test.js') }}"></script>
 </body>
 </html>
