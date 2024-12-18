@@ -1,7 +1,7 @@
 import createModule from './mandel.js';
 
-const width = 1920;
-const height = 1080;
+const width = 800;
+const height = 800;
 const maxIteration = 100;
 let offsetX = 1;
 let offsetY = 1;

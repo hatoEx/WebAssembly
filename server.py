@@ -3,11 +3,42 @@ from flask_socketio import SocketIO, emit
 import uuid
 
 app = Flask(__name__)
-app.secret_key = 'test'  # 任意の文字列を設定してください
+app.secret_key = 'test'  # 本番環境ではより安全なキーを使用してください
 socketio = SocketIO(app)
 
-rankings_cpu = {}
-rankings_gpu = {}
+# ランキングデータをリストとして保持
+rankings_cpu = []
+rankings_gpu = []
+
+MAX_RANKINGS = 10  # 上位10のみ保持
+
+def update_ranking(rankings, user_id, score):
+    """
+    ランキングを更新し、必要に応じてスコアを追加または更新し、
+    上位10のみを保持する。
+    """
+    # ユーザーの既存のスコアを検索
+    existing_entry = next((entry for entry in rankings if entry['name'] == user_id), None)
+    
+    if existing_entry:
+        # 新しいスコアが既存のスコアより高い場合のみ更新
+        if score > existing_entry['score']:
+            existing_entry['score'] = score
+            print(f"ユーザー {user_id} のスコアを更新しました: {score}")
+    else:
+        # 新しいエントリーを追加
+        rankings.append({"name": user_id, "score": score})
+        print(f"ユーザー {user_id} が新たにスコアを提出しました: {score}")
+    
+    # スコアでソート（降順）
+    rankings.sort(key=lambda x: x['score'], reverse=True)
+    
+    # 上位10のみを保持
+    if len(rankings) > MAX_RANKINGS:
+        removed = rankings[MAX_RANKINGS:]
+        rankings[:] = rankings[:MAX_RANKINGS]
+        removed_ids = [entry['name'] for entry in removed]
+        print(f"ランキングから除外されたユーザー: {removed_ids}")
 
 @app.route('/')
 def index():
@@ -27,23 +58,31 @@ def submit_score():
     score = data.get('score')
     mode = data.get('mode')
 
-    if user_id:
-        (rankings_cpu if mode == 'cpu' else rankings_gpu)[user_id] = score  # CPU/GPUに応じてランキングに格納
-        print(f"User {user_id} submitted score: {score} to {mode} rankings")
-
+    if user_id and score is not None and mode in ['cpu', 'gpu']:
+        if mode == 'cpu':
+            update_ranking(rankings_cpu, user_id, score)
+        else:
+            update_ranking(rankings_gpu, user_id, score)
+        
+        # 更新されたランキングデータを準備
+        updated_rankings = {
+            "cpu": rankings_cpu.copy(),
+            "gpu": rankings_gpu.copy()
+        }
+        
+        # すべての接続クライアントに更新されたランキングを送信
+        socketio.emit("ranking_data", updated_rankings, namespace="/", to=None)
 
     return jsonify({'status': 'success', 'score': score})
 
-
 @socketio.on("connect")
 def handle_connect():
-    print("connected")
-    # クライアントにランキングデータを送信
+    print("クライアントが接続しました")
+    # 現在のランキングデータを新しく接続したクライアントに送信
     emit("ranking_data", {
-        "cpu": [{"name": user_id, "score": score} for user_id, score in rankings_cpu.items()],
-        "gpu": [{"name": user_id, "score": score} for user_id, score in rankings_gpu.items()]
+        "cpu": rankings_cpu,
+        "gpu": rankings_gpu
     })
-
 
 if __name__ == '__main__':
     socketio.run(app, debug=True)
