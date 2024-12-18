@@ -146,8 +146,9 @@ function onMouseDown(event) {
 function onMouseMove(event) {
     if (!isDragging) return;
 
-    const deltaX = (event.clientX - lastMouseX) / 600; // 調整係数
-    const deltaY = (event.clientY - lastMouseY) / 600;
+    const adjustmentFactor = zoom; // ズーム値に応じた調整係数
+    const deltaX = (event.clientX - lastMouseX) / (600 * adjustmentFactor); // 調整後の係数を使用
+    const deltaY = (event.clientY - lastMouseY) / (600 * adjustmentFactor);
 
     offsetX -= deltaX;
     offsetY -= deltaY;
