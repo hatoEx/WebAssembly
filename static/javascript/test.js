@@ -181,12 +181,6 @@ function onWheel(event) {
     zoom = Math.min(Math.max(zoom, minZoom), maxZoom);
 }
 
-const socket = io.connect("http://" + document.domain + ":" + location.port );
-
-socket.on('message', function(data) {
-    console.log("connected: " + data.data);
-});
-
 
 
 attachMouseEvents(canvas); // 初期canvasにもイベント登録

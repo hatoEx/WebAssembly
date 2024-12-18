@@ -29,3 +29,10 @@ const sampleRanking = [
 
 // ランキングデータを追加する関数の呼び出し
 renderRanking(sampleRanking);
+
+
+const socket = io.connect("http://" + document.domain + ":" + location.port );
+
+socket.on('message', function(data) {
+    console.log("connected: " + data.data);
+});
