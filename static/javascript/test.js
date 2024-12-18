@@ -166,6 +166,8 @@ function onMouseUp() {
 function onWheel(event) {
     event.preventDefault(); // デフォルトのスクロール動作を無効化
     const zoomFactor = 0.1; // ズーム倍率の調整
+    const maxZoom = 5; // ズームの最大値
+    const minZoom = 0.5; // ズームの最小値
 
     if (event.deltaY < 0) {
         // ホイールを上にスクロール（ズームイン）
@@ -174,6 +176,9 @@ function onWheel(event) {
         // ホイールを下にスクロール（ズームアウト）
         zoom /= 1 + zoomFactor;
     }
+
+    // zoom に上限と下限を適用
+    zoom = Math.min(Math.max(zoom, minZoom), maxZoom);
 }
 
 const socket = io.connect("http://" + document.domain + ":" + location.port );
