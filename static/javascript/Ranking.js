@@ -1,4 +1,9 @@
-// ランキングデータを追加する関数
+const rankings_cpu = [
+];
+
+const rankings_gpu = [
+];
+
 function renderRanking(rankingData) {
     const rankingList = document.getElementById("ranking-list");
     rankingList.innerHTML = ""; // リストをクリア
@@ -18,21 +23,38 @@ function renderRanking(rankingData) {
     });
 }
 
-// テストデータ
-const sampleRanking = [
-    { name: "プレイヤーA", score: 12345 },
-    { name: "プレイヤーB", score: 9876 },
-    { name: "プレイヤーC", score: 6789 },
-    { name: "プレイヤーD", score: 4321 },
-    { name: "プレイヤーE", score: 2100 }
-];
+const rankingTypeSelect = document.getElementById("ranking-type");
 
-// ランキングデータを追加する関数の呼び出し
-renderRanking(sampleRanking);
+// 初期表示 (CPUランキング)
+renderRanking(rankings_cpu);
 
+// セレクトボックスの変更イベントに応じてランキングを切り替え
+rankingTypeSelect.addEventListener("change", () => {
+    const selectedType = rankingTypeSelect.value;
 
-const socket = io.connect("http://" + document.domain + ":" + location.port );
+    if (selectedType === "cpu") {
+        renderRanking(rankings_cpu);
+    } else if (selectedType === "gpu") {
+        renderRanking(rankings_gpu);
+    }
+});
 
-socket.on('message', function(data) {
-    console.log("connected: " + data.data);
+const socket = io.connect("http://" + document.domain + ":" + location.port);
+
+socket.on("ranking_data", (data) => {
+    console.log("Ranking data received: ", data);
+
+    // 初期表示 (CPUランキング)
+    renderRanking(data.cpu);
+
+    // セレクトボックスの変更イベントに応じてランキングを切り替え
+    rankingTypeSelect.addEventListener("change", () => {
+        const selectedType = rankingTypeSelect.value;
+
+        if (selectedType === "cpu") {
+            renderRanking(data.cpu);
+        } else if (selectedType === "gpu") {
+            renderRanking(data.gpu);
+        }
+    });
 });

@@ -30,7 +30,8 @@ def submit_score():
     if user_id:
         (rankings_cpu if mode == 'cpu' else rankings_gpu)[user_id] = score  # CPU/GPUに応じてランキングに格納
         print(f"User {user_id} submitted score: {score} to {mode} rankings")
-    
+
+
     return jsonify({'status': 'success', 'score': score})
 
 
@@ -39,9 +40,10 @@ def handle_connect():
     print("connected")
     # クライアントにランキングデータを送信
     emit("ranking_data", {
-        "cpu": rankings_cpu,
-        "gpu": rankings_gpu
+        "cpu": [{"name": user_id, "score": score} for user_id, score in rankings_cpu.items()],
+        "gpu": [{"name": user_id, "score": score} for user_id, score in rankings_gpu.items()]
     })
+
 
 if __name__ == '__main__':
     socketio.run(app, debug=True)
