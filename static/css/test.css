@@ -1,0 +1,124 @@
+/* CSS変数の定義でカラーパレットとフォントを統一 */
+:root {
+    --bg-color: #121212;
+    --primary-color: #1e90ff;
+    --secondary-color: #ff4081;
+    --text-color: #ffffff;
+    --overlay-bg: rgba(50, 50, 50, 0.85);
+    --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    --transition-speed: 0.3s;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: var(--font-family);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    position: relative;
+    overflow: hidden;
+}
+
+/* 上部コントロールパネルのスタイリング */
+.controls {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    background: rgba(30, 30, 30, 0.8);
+    padding: 10px 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+}
+
+select, button {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 5px;
+    background-color: var(--primary-color);
+    color: var(--text-color);
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color var(--transition-speed);
+}
+
+select:hover, button:hover {
+    background-color: var(--secondary-color);
+}
+
+/* スコアとタイマーのスタイリング */
+.status {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 30px;
+    font-size: 1.2em;
+    background: rgba(30, 30, 30, 0.8);
+    padding: 10px 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+}
+
+.status div {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+/* Canvasのスタイリング */
+canvas {
+    border: 2px solid var(--primary-color);
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+    cursor: grab;
+    transition: transform var(--transition-speed);
+}
+
+canvas:active {
+    cursor: grabbing;
+    transform: scale(1.002);
+}
+
+/* 最終スコアボードのスタイリング */
+#finalScoreboard {
+    display: none;
+    position: absolute;
+    top: 50%; 
+    left: 50%; 
+    transform: translate(-50%, -50%);
+    background-color: var(--overlay-bg);
+    color: var(--text-color);
+    padding: 30px 50px;
+    font-size: 2.5em;
+    border-radius: 12px;
+    text-align: center;
+    z-index: 999;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.7);
+}
+
+/* レスポンシブデザイン */
+@media (max-width: 900px) {
+    canvas {
+        width: 90%;
+        height: auto;
+    }
+
+    .controls, .status {
+        flex-direction: column;
+        gap: 10px;
+    }
+}
