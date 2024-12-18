@@ -82,17 +82,22 @@ async function render() {
 }
 
 function sendScore(score) {
+    const device_mode = renderModeSelect.value;;
     fetch('/submit_score', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ score: score })
+        body: JSON.stringify({ 
+            score: score, 
+            mode: device_mode
+        })
     })
     .then(response => response.json())
     .then(data => console.log('Success:', data))
     .catch((error) => console.error('Error:', error));
 }
+
 
 function benchmarkLoop() {
     if (!isBenchmarking) return;
