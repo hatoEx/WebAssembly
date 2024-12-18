@@ -48,6 +48,7 @@ function attachMouseEvents(canvasElement) {
     canvasElement.addEventListener('mousemove', onMouseMove);
     canvasElement.addEventListener('mouseup', onMouseUp);
     canvasElement.addEventListener('mouseleave', onMouseUp);
+    canvasElement.addEventListener('wheel', onWheel);
 }
 
 async function renderCPU(module) {
@@ -80,15 +81,6 @@ async function render() {
     }
 }
 
-function updateZoom() {
-    const mode = renderModeSelect.value;
-    const currentTime = performance.now();
-    const delta = currentTime - lastTime;
-    if(mode === 'cpu') zoom += 0.00001 * delta;
-    else zoom += 0.000001 * delta;
-    lastTime = currentTime;
-}
-
 function sendScore(score) {
     fetch('/submit_score', {
         method: 'POST',
@@ -105,7 +97,6 @@ function sendScore(score) {
 function benchmarkLoop() {
     if (!isBenchmarking) return;
 
-    updateZoom();
     render().then(() => {
         frame++;
         scorevalue.textContent = frame;
@@ -169,6 +160,19 @@ function onMouseMove(event) {
 
 function onMouseUp() {
     isDragging = false;
+}
+
+function onWheel(event) {
+    event.preventDefault(); // デフォルトのスクロール動作を無効化
+    const zoomFactor = 0.1; // ズーム倍率の調整
+
+    if (event.deltaY < 0) {
+        // ホイールを上にスクロール（ズームイン）
+        zoom *= 1 + zoomFactor;
+    } else {
+        // ホイールを下にスクロール（ズームアウト）
+        zoom /= 1 + zoomFactor;
+    }
 }
 
 const socket = io.connect("http://" + document.domain + ":" + location.port );
