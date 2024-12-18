@@ -51,6 +51,10 @@ def index():
 def ranking():
     return render_template('Ranking.html')
 
+@app.route('/Debag')
+def debag():
+    return render_template('Debag.html')
+
 @app.route('/submit_score', methods=['POST'])
 def submit_score():
     user_id = session.get('user_id')
@@ -74,6 +78,38 @@ def submit_score():
         socketio.emit("ranking_data", updated_rankings, namespace="/", to=None)
 
     return jsonify({'status': 'success', 'score': score})
+
+@app.route('/debug_submit_score', methods=['POST'])
+def debug_submit_score():
+    data = request.get_json()
+    name = data.get('name')
+    score = data.get('score')
+    mode = data.get('mode')
+
+    # 入力バリデーション
+    if not name:
+        return jsonify({'status': 'error', 'message': '名前が提供されていません。'}), 400
+    if score is None or not isinstance(score, int) or score < 0:
+        return jsonify({'status': 'error', 'message': '有効なスコアが提供されていません。'}), 400
+    if mode not in ['cpu', 'gpu']:
+        return jsonify({'status': 'error', 'message': '有効なモードが選択されていません。'}), 400
+
+    # 選択されたモードに応じてランキングに追加
+    if mode == 'cpu':
+        update_ranking(rankings_cpu, name, score)
+    else:
+        update_ranking(rankings_gpu, name, score)
+
+    # 更新されたランキングデータを準備
+    updated_rankings = {
+        "cpu": rankings_cpu.copy(),
+        "gpu": rankings_gpu.copy()
+    }
+
+    # すべての接続クライアントに更新されたランキングを送信
+    socketio.emit("ranking_data", updated_rankings, namespace="/", to=None)
+
+    return jsonify({'status': 'success', 'name': name, 'score': score, 'mode': mode})
 
 @socketio.on("connect")
 def handle_connect():

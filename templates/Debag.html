@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>デバッグ送信フォーム</title>
+    <style>
+        /* リセットと基本スタイル */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background-color: #ffffff;
+            padding: 30px 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .container h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333333;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555555;
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid #cccccc;
+            border-radius: 5px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: #4A90E2;
+            outline: none;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 12px 0;
+            background-color: #4A90E2;
+            color: #ffffff;
+            border: none;
+            border-radius: 5px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .btn:hover {
+            background-color: #357ABD;
+        }
+
+        .message {
+            margin-top: 15px;
+            text-align: center;
+            font-size: 0.9em;
+            color: #28a745;
+            display: none;
+        }
+
+        .error {
+            color: #dc3545;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>デバッグ送信フォーム</h2>
+        <div class="form-group">
+            <label for="name">名前</label>
+            <input type="text" id="name" placeholder="名前を入力してください">
+        </div>
+        <div class="form-group">
+            <label for="score">スコア</label>
+            <input type="number" id="score" placeholder="スコアを入力してください">
+        </div>
+        <div class="form-group">
+            <label for="mode">モード</label>
+            <select id="mode">
+                <option value="cpu">CPU</option>
+                <option value="gpu">GPU</option>
+            </select>
+        </div>
+        <button class="btn" id="sendButton">送信</button>
+        <div class="message" id="message">送信が成功しました!</div>
+        <div class="message error" id="errorMessage">エラーが発生しました。再度お試しください。</div>
+    </div>
+
+    <script>
+        document.getElementById('sendButton').addEventListener('click', () => {
+            const name = document.getElementById('name').value.trim();
+            const score = parseInt(document.getElementById('score').value, 10);
+            const mode = document.getElementById('mode').value;
+
+            // 入力バリデーション
+            if (!name) {
+                showError('名前を入力してください。');
+                return;
+            }
+            if (isNaN(score) || score < 0) {
+                showError('有効なスコアを入力してください。');
+                return;
+            }
+            if (!['cpu', 'gpu'].includes(mode)) {
+                showError('有効なモードを選択してください。');
+                return;
+            }
+
+            // 送信データの準備
+            const data = {
+                name: name,
+                score: score,
+                mode: mode
+            };
+
+            // データ送信
+            fetch('/debug_submit_score', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    showMessage('送信が成功しました!');
+                    document.getElementById('name').value = '';
+                    document.getElementById('score').value = '';
+                    document.getElementById('mode').value = 'cpu'; // デフォルトに戻す
+                } else {
+                    showError(data.message || '送信に失敗しました。');
+                }
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                showError('エラーが発生しました。再度お試しください。');
+            });
+        });
+
+        function showMessage(msg) {
+            const message = document.getElementById('message');
+            const errorMessage = document.getElementById('errorMessage');
+            message.textContent = msg;
+            message.style.display = 'block';
+            errorMessage.style.display = 'none';
+        }
+
+        function showError(msg) {
+            const errorMessage = document.getElementById('errorMessage');
+            const message = document.getElementById('message');
+            errorMessage.textContent = msg;
+            errorMessage.style.display = 'block';
+            message.style.display = 'none';
+        }
+    </script>
+</body>
+</html>
