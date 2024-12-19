@@ -1,4 +1,3 @@
-// 初期ランキングデータをローカルストレージから取得。なければ空配列を設定
 const rankings_cpu = JSON.parse(localStorage.getItem("rankings_cpu")) || [];
 const rankings_gpu = JSON.parse(localStorage.getItem("rankings_gpu")) || [];
 
@@ -25,7 +24,7 @@ function renderRanking(rankingData) {
 // セレクトボックスと初期表示の設定
 const rankingTypeSelect = document.getElementById("ranking-type");
 
-// 初期表示 (ローカルストレージから取得したCPUランキング)
+
 renderRanking(rankings_cpu);
 
 // セレクトボックスの変更イベントに応じてランキングを切り替え

@@ -3,7 +3,7 @@ from flask_socketio import SocketIO, emit
 import uuid
 
 app = Flask(__name__)
-app.secret_key = 'test'  # 本番環境ではより安全なキーを使用してください
+app.secret_key = 'test'
 socketio = SocketIO(app)
 
 # ランキングデータをリストとして保持

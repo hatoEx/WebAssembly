@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/Ranking.css') }}">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.4.1/socket.io.js"></script>
     <script type="module" src="{{ url_for('static', filename='javascript/Ranking.js') }}"></script>
-    <!-- Google Fontsの追加 -->
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -26,18 +25,6 @@
                 <span class="name">プレイヤー名</span>
                 <span class="score">点</span>
             </li>
-            <!-- サンプルのランキング項目を追加 -->
-            <li class="ranking-item">
-                <span class="rank">2</span>
-                <span class="name">プレイヤーB</span>
-                <span class="score">1500点</span>
-            </li>
-            <li class="ranking-item">
-                <span class="rank">3</span>
-                <span class="name">プレイヤーC</span>
-                <span class="score">1400点</span>
-            </li>
-            <!-- 必要に応じて追加 -->
         </ul>
     </div>
 </body>

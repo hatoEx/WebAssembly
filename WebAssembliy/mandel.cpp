@@ -6,7 +6,7 @@
 #include <emscripten/html5.h>
 #include <GLES3/gl3.h>
 
-// HSVからRGBへの変換（CPU用処理で使用）
+// HSV to RGB変換
 static void hsv_to_rgb(double h, double s, double v, uint8_t& r, uint8_t& g, uint8_t& b) {
     double c = v * s;
     double x = c * (1 - fabs(fmod(h / 60.0, 2) - 1));
@@ -117,7 +117,7 @@ vec3 hsv_to_rgb(float h, float s, float v) {
 }
 
 void main() {
-    // v_coordは -1～1 の範囲。CPU側との整合を取るため、y軸を反転する。
+    
     float px = (v_coord.x / 2.0) * (3.5 / u_zoom) + u_offsetX;
     float py = ((-v_coord.y) / 2.0) * (2.0 / u_zoom) + u_offsetY;
 
@@ -151,7 +151,7 @@ void main() {
 )";
 
 
-    // シェーダーコンパイル用関数
+    // シェーダーコンパイル用
     static GLuint compileShader(GLenum type, const char* src) {
         GLuint shader = glCreateShader(type);
         glShaderSource(shader, 1, &src, nullptr);
@@ -168,8 +168,6 @@ void main() {
         return shader;
     }
 
-    // GPUでMandelbrotを描画する関数
-    // キャンバス: #mandelbrot を想定
     EMSCRIPTEN_KEEPALIVE
     void render_mandelbrot_gpu(int width, int height, double offsetX, double offsetY, double zoom, int maxIteration) {
         EmscriptenWebGLContextAttributes attr;
@@ -240,7 +238,6 @@ void main() {
 
         glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 
-        // 終了処理(シェーダ削除等)は省略可能
-        // 一度描画すればそのままキャンバス上に表示され続ける
+
     }
 }

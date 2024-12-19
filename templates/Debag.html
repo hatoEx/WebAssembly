@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>デバッグ送信フォーム</title>
     <style>
-        /* リセットと基本スタイル */
         * {
             margin: 0;
             padding: 0;
@@ -156,7 +155,7 @@
                     showMessage('送信が成功しました!');
                     document.getElementById('name').value = '';
                     document.getElementById('score').value = '';
-                    document.getElementById('mode').value = 'cpu'; // デフォルトに戻す
+                    document.getElementById('mode').value = 'cpu';
                 } else {
                     showError(data.message || '送信に失敗しました。');
                 }

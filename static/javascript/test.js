@@ -42,7 +42,7 @@ function resetCanvas() {
     return newCanvas;
 }
 
-// マウスイベントを再登録する関数
+
 function attachMouseEvents(canvasElement) {
     canvasElement.addEventListener('mousedown', onMouseDown);
     canvasElement.addEventListener('mousemove', onMouseMove);
@@ -151,8 +151,8 @@ function onMouseDown(event) {
 function onMouseMove(event) {
     if (!isDragging) return;
 
-    const adjustmentFactor = zoom; // ズーム値に応じた調整係数
-    const deltaX = (event.clientX - lastMouseX) / (600 * adjustmentFactor); // 調整後の係数を使用
+    const adjustmentFactor = zoom;
+    const deltaX = (event.clientX - lastMouseX) / (600 * adjustmentFactor);
     const deltaY = (event.clientY - lastMouseY) / (600 * adjustmentFactor);
 
     offsetX -= deltaX;
@@ -188,6 +188,6 @@ function onWheel(event) {
 
 
 
-attachMouseEvents(canvas); // 初期canvasにもイベント登録
+attachMouseEvents(canvas);
 
 renderButton.addEventListener('click', startBenchmark);
