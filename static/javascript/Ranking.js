@@ -39,7 +39,10 @@ rankingTypeSelect.addEventListener("change", () => {
 });
 
 // ソケット接続の設定
-const socket = io.connect("http://" + document.domain + ":" + location.port);
+const socket = io.connect(
+    (window.location.protocol === "https:" ? "wss://" : "ws://") + window.location.hostname
+);
+
 
 socket.on("ranking_data", (data) => {
     console.log("Ranking data received: ", data);
